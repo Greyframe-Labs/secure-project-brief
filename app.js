@@ -13,9 +13,12 @@ const briefing = document.getElementById("briefing");
 const accessForm = document.getElementById("accessForm");
 const accessPhrase = document.getElementById("accessPhrase");
 const unlockButton = document.getElementById("unlockButton");
+const unlockButtonLabel = unlockButton.querySelector("span:first-child");
 const accessMessage = document.getElementById("accessMessage");
 const briefVideo = document.getElementById("briefVideo");
 const videoPlaceholder = document.getElementById("videoPlaceholder");
+const videoPlaceholderCopy = videoPlaceholder.querySelector("p");
+const headerState = document.getElementById("headerState");
 const footerState = document.getElementById("footerState");
 
 let decryptedVideoUrl = null;
@@ -25,6 +28,13 @@ function setMessage(message, state = "neutral") {
   accessMessage.classList.remove("error", "success");
   if (state === "error") accessMessage.classList.add("error");
   if (state === "success") accessMessage.classList.add("success");
+}
+
+function setBusy(isBusy) {
+  unlockButton.disabled = isBusy;
+  accessPhrase.disabled = isBusy;
+  unlockButton.setAttribute("aria-busy", String(isBusy));
+  unlockButtonLabel.textContent = isBusy ? "DECRYPTING" : "OPEN BRIEF";
 }
 
 function bytesEqual(a, b) {
@@ -150,17 +160,32 @@ function revealBriefing(decryptedBuffer) {
   const videoBlob = new Blob([decryptedBuffer], { type: "video/mp4" });
   decryptedVideoUrl = URL.createObjectURL(videoBlob);
   briefVideo.src = decryptedVideoUrl;
+  briefVideo.load();
 
   accessGate.hidden = true;
   briefing.hidden = false;
   document.body.dataset.state = "unlocked";
+  headerState.textContent = "ACCESS GRANTED / LOCAL DECRYPTION";
   footerState.textContent = "BRIEF DECRYPTED LOCALLY";
-  videoPlaceholder.classList.add("hidden");
+  videoPlaceholderCopy.textContent = "Loading decrypted briefing media";
 
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   requestAnimationFrame(() => {
-    briefing.scrollIntoView({ behavior: "smooth", block: "start" });
+    briefing.scrollIntoView({
+      behavior: reduceMotion ? "auto" : "smooth",
+      block: "start"
+    });
   });
 }
+
+briefVideo.addEventListener("canplay", () => {
+  videoPlaceholder.classList.add("hidden");
+});
+
+briefVideo.addEventListener("error", () => {
+  videoPlaceholder.classList.remove("hidden");
+  videoPlaceholderCopy.textContent = "Decrypted media could not be prepared for playback";
+});
 
 accessForm.addEventListener("submit", async (event) => {
   event.preventDefault();
@@ -172,8 +197,7 @@ accessForm.addEventListener("submit", async (event) => {
     return;
   }
 
-  unlockButton.disabled = true;
-  accessPhrase.disabled = true;
+  setBusy(true);
   setMessage("Retrieving encrypted media and deriving a local decryption key…");
 
   try {
@@ -194,10 +218,12 @@ accessForm.addEventListener("submit", async (event) => {
       setMessage("Access phrase not accepted. Verify the phrase and try again.", "error");
     }
   } finally {
-    unlockButton.disabled = false;
-    accessPhrase.disabled = false;
+    setBusy(false);
     accessPhrase.value = "";
-    accessPhrase.focus();
+
+    if (document.body.dataset.state !== "unlocked") {
+      accessPhrase.focus();
+    }
   }
 });
 
