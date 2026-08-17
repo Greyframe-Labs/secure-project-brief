@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex,nofollow,noarchive" />
+  <title>Encrypt Recruiter Brief</title>
+  <style>
+    :root { color-scheme: dark; font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 28px; background: #090a0c; color: #f2f3f5; }
+    main { width: min(680px, 100%); border: 1px solid #2b2f36; background: #111319; padding: 28px; }
+    .eyebrow { margin: 0 0 12px; color: #ff6b2c; font-size: 11px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
+    h1 { margin: 0 0 12px; font-size: clamp(34px, 7vw, 58px); line-height: .95; letter-spacing: -.045em; }
+    .intro { margin: 0 0 28px; color: #979ca6; line-height: 1.6; }
+    label { display: block; margin: 18px 0 7px; color: #c8cad0; font-size: 10px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+    input { width: 100%; min-height: 48px; padding: 10px 12px; border: 1px solid #343841; border-radius: 0; background: #090a0c; color: white; font: inherit; }
+    input:focus { outline: 1px solid #ff6b2c; border-color: #ff6b2c; }
+    button { width: 100%; min-height: 50px; margin-top: 22px; border: 0; border-radius: 0; cursor: pointer; background: #ff6b2c; color: #130b07; font-weight: 900; letter-spacing: .12em; }
+    button:disabled { opacity: .6; cursor: wait; }
+    #status { min-height: 24px; margin: 14px 0 0; color: #969ba6; font-size: 12px; line-height: 1.5; }
+    #status.error { color: #ff8f7b; }
+    #status.success { color: #8ce7b1; }
+    .note { margin-top: 26px; padding-top: 18px; border-top: 1px solid #292d34; color: #717782; font-size: 11px; line-height: 1.6; }
+    code { color: #d7d9de; }
+  </style>
+</head>
+<body>
+  <main>
+    <p class="eyebrow">Local preparation tool</p>
+    <h1>Encrypt recruiter video</h1>
+    <p class="intro">This utility encrypts the selected MP4 entirely in your browser. The source video and passphrase are not uploaded by this page.</p>
+
+    <form id="encryptForm">
+      <label for="videoFile">MP4 video</label>
+      <input id="videoFile" type="file" accept="video/mp4,.mp4" required />
+
+      <label for="passphrase">Access phrase</label>
+      <input id="passphrase" type="password" minlength="16" autocomplete="new-password" required />
+
+      <label for="confirmPassphrase">Confirm access phrase</label>
+      <input id="confirmPassphrase" type="password" minlength="16" autocomplete="new-password" required />
+
+      <button id="encryptButton" type="submit">ENCRYPT + DOWNLOAD</button>
+      <p id="status" role="status" aria-live="polite">Use a unique passphrase of at least 16 characters and deliver it separately from the page URL.</p>
+    </form>
+
+    <p class="note">Output format: <code>SPB1 + 16-byte salt + 12-byte IV + AES-256-GCM ciphertext</code>. Key derivation uses PBKDF2/SHA-256 with 600,000 iterations. The finished file should be placed at <code>assets/recruiter-brief.enc</code>.</p>
+  </main>
+
+  <script>
+    const PBKDF2_ITERATIONS = 600000;
+    const MAGIC = new Uint8Array([0x53, 0x50, 0x42, 0x31]);
+
+    const form = document.getElementById("encryptForm");
+    const fileInput = document.getElementById("videoFile");
+    const passInput = document.getElementById("passphrase");
+    const confirmInput = document.getElementById("confirmPassphrase");
+    const button = document.getElementById("encryptButton");
+    const status = document.getElementById("status");
+
+    function setStatus(message, state = "neutral") {
+      status.textContent = message;
+      status.className = state === "neutral" ? "" : state;
+    }
+
+    async function deriveKey(passphrase, salt) {
+      const baseKey = await crypto.subtle.importKey(
+        "raw",
+        new TextEncoder().encode(passphrase),
+        "PBKDF2",
+        false,
+        ["deriveKey"]
+      );
+
+      return crypto.subtle.deriveKey(
+        { name: "PBKDF2", hash: "SHA-256", salt, iterations: PBKDF2_ITERATIONS },
+        baseKey,
+        { name: "AES-GCM", length: 256 },
+        false,
+        ["encrypt"]
+      );
+    }
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const file = fileInput.files[0];
+      const passphrase = passInput.value;
+      const confirmation = confirmInput.value;
+
+      if (!file) {
+        setStatus("Choose the final MP4 first.", "error");
+        return;
+      }
+      if (passphrase.length < 16) {
+        setStatus("Use an access phrase of at least 16 characters.", "error");
+        return;
+      }
+      if (passphrase !== confirmation) {
+        setStatus("The two access phrase fields do not match.", "error");
+        return;
+      }
+
+      button.disabled = true;
+      fileInput.disabled = true;
+      passInput.disabled = true;
+      confirmInput.disabled = true;
+      setStatus("Reading and encrypting locally. Keep this tab open until the download begins.");
+
+      try {
+        const plaintext = await file.arrayBuffer();
+        const salt = crypto.getRandomValues(new Uint8Array(16));
+        const iv = crypto.getRandomValues(new Uint8Array(12));
+        const key = await deriveKey(passphrase, salt);
+        const ciphertext = new Uint8Array(await crypto.subtle.encrypt({ name: "AES-GCM", iv }, key, plaintext));
+
+        const output = new Uint8Array(MAGIC.length + salt.length + iv.length + ciphertext.length);
+        let cursor = 0;
+        output.set(MAGIC, cursor); cursor += MAGIC.length;
+        output.set(salt, cursor); cursor += salt.length;
+        output.set(iv, cursor); cursor += iv.length;
+        output.set(ciphertext, cursor);
+
+        const blob = new Blob([output], { type: "application/octet-stream" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "recruiter-brief.enc";
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+
+        passInput.value = "";
+        confirmInput.value = "";
+        setStatus("Encryption complete. Save recruiter-brief.enc into the repository assets folder.", "success");
+      } catch (error) {
+        console.error(error);
+        setStatus("Encryption failed in this browser. Use a current Chromium, Firefox, or Safari browser and try again.", "error");
+      } finally {
+        button.disabled = false;
+        fileInput.disabled = false;
+        passInput.disabled = false;
+        confirmInput.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
