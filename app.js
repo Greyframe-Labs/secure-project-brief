@@ -20,8 +20,10 @@ const videoPlaceholder = document.getElementById("videoPlaceholder");
 const videoPlaceholderCopy = videoPlaceholder.querySelector("p");
 const headerState = document.getElementById("headerState");
 const footerState = document.getElementById("footerState");
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
 let decryptedVideoUrl = null;
+let revealObserver = null;
 
 function setMessage(message, state = "neutral") {
   accessMessage.textContent = message;
@@ -152,6 +154,44 @@ async function decryptBrief(buffer, passphrase) {
   );
 }
 
+function prepareRevealTargets() {
+  const directTargets = briefing.querySelectorAll(
+    ".briefing-intro, .video-section, .proof-band .shell, .systems-heading, .system-card, .fit-statement, .closing"
+  );
+
+  directTargets.forEach((element) => element.classList.add("reveal"));
+
+  const staggerTargets = briefing.querySelectorAll(".reveal-stagger");
+  staggerTargets.forEach((element) => element.classList.add("reveal-stagger"));
+}
+
+function activateRevealMotion() {
+  const targets = briefing.querySelectorAll(".reveal, .reveal-stagger");
+
+  if (reduceMotion.matches || !("IntersectionObserver" in window)) {
+    targets.forEach((element) => element.classList.add("is-visible"));
+    return;
+  }
+
+  if (revealObserver) revealObserver.disconnect();
+
+  revealObserver = new IntersectionObserver(
+    (entries, observer) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("is-visible");
+        observer.unobserve(entry.target);
+      });
+    },
+    {
+      threshold: 0.14,
+      rootMargin: "0px 0px -7% 0px"
+    }
+  );
+
+  targets.forEach((element) => revealObserver.observe(element));
+}
+
 function revealBriefing(decryptedBuffer) {
   if (decryptedVideoUrl) {
     URL.revokeObjectURL(decryptedVideoUrl);
@@ -165,14 +205,16 @@ function revealBriefing(decryptedBuffer) {
   accessGate.hidden = true;
   briefing.hidden = false;
   document.body.dataset.state = "unlocked";
-  headerState.textContent = "ACCESS GRANTED / LOCAL DECRYPTION";
+  headerState.textContent = "BUILD BRIEF / ACCESS GRANTED";
   footerState.textContent = "BRIEF DECRYPTED LOCALLY";
   videoPlaceholderCopy.textContent = "Loading decrypted briefing media";
 
-  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  prepareRevealTargets();
+  activateRevealMotion();
+
   requestAnimationFrame(() => {
     briefing.scrollIntoView({
-      behavior: reduceMotion ? "auto" : "smooth",
+      behavior: reduceMotion.matches ? "auto" : "smooth",
       block: "start"
     });
   });
@@ -227,7 +269,14 @@ accessForm.addEventListener("submit", async (event) => {
   }
 });
 
+reduceMotion.addEventListener?.("change", () => {
+  if (document.body.dataset.state === "unlocked") {
+    activateRevealMotion();
+  }
+});
+
 window.addEventListener("beforeunload", () => {
+  if (revealObserver) revealObserver.disconnect();
   if (decryptedVideoUrl) {
     URL.revokeObjectURL(decryptedVideoUrl);
   }
