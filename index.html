@@ -3,151 +3,255 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#0a0b0d" />
+  <meta name="theme-color" content="#0b0b0b" />
   <meta name="robots" content="noindex,nofollow,noarchive" />
-  <title>Candidate Mission Brief | Maxim Teleguz</title>
-  <meta name="description" content="Private candidate briefing prepared by Maxim Teleguz for the Anduril Industries recruiting team." />
+  <title>Maxim Teleguz | Engineering Systems Brief</title>
+  <meta name="description" content="Selective candidate briefing prepared by Maxim Teleguz for Anduril Industries recruiting." />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body data-state="locked">
-  <div class="ambient ambient-one" aria-hidden="true"></div>
-  <div class="ambient ambient-two" aria-hidden="true"></div>
-  <div class="grid-overlay" aria-hidden="true"></div>
+  <div class="page-grid" aria-hidden="true"></div>
 
   <header class="site-header shell">
-    <a class="wordmark" href="./" aria-label="Candidate Mission Brief home">
-      <span class="wordmark-mark">G</span>
-      <span class="wordmark-copy">GREYFRAME LABS <em>/ CANDIDATE BRIEF</em></span>
+    <a class="wordmark" href="./" aria-label="Engineering Systems Brief home">
+      <span class="wordmark-mark" aria-hidden="true">G</span>
+      <span class="wordmark-copy">
+        <strong>GREYFRAME LABS</strong>
+        <span>CANDIDATE SYSTEMS BRIEF</span>
+      </span>
     </a>
-    <div class="header-status">
-      <span class="status-dot"></span>
-      PRIVATE CANDIDATE MATERIAL
+
+    <div class="header-status" aria-label="Brief status">
+      <span class="status-dot" aria-hidden="true"></span>
+      <span id="headerState">SELECTIVE SHARE / MEDIA LOCKED</span>
     </div>
   </header>
 
   <main>
     <section id="accessGate" class="hero shell" aria-labelledby="brief-title">
       <div class="hero-copy">
-        <p class="eyebrow">Prepared for Anduril Industries Recruiting</p>
-        <h1 id="brief-title">CANDIDATE<br /><span>MISSION BRIEF</span></h1>
-        <p class="lede">PLM systems. Mechanical design. Builder tooling. Mission-focused execution.</p>
+        <p class="eyebrow">PLM / CAD / AUTOMATION / MISSION SYSTEMS</p>
+        <h1 id="brief-title">
+          <span class="hero-line">BUILD THE</span>
+          <span class="hero-line outline">SYSTEM</span>
+          <span class="hero-line">BEHIND THE</span>
+          <span class="hero-line accent-line">HARDWARE.</span>
+        </h1>
 
-        <div class="brief-meta" aria-label="Brief metadata">
+        <p class="lede">15+ years in mechanical design and product definition, now applied to Teamcenter, NX, configuration control, and engineering automation.</p>
+
+        <div class="capability-rail" aria-label="Candidate capability summary">
           <div>
-            <span class="meta-label">Candidate</span>
-            <strong>Maxim Teleguz</strong>
+            <span class="rail-value">15+</span>
+            <span class="rail-label">Years / product definition</span>
           </div>
           <div>
-            <span class="meta-label">Target</span>
-            <strong>PLM Developer</strong>
+            <span class="rail-value">TC 2312</span>
+            <span class="rail-label">Teamcenter / administration</span>
           </div>
           <div>
-            <span class="meta-label">Focus</span>
-            <strong>Teamcenter · NX · Automation</strong>
+            <span class="rail-value">NX</span>
+            <span class="rail-label">Managed mode / design</span>
+          </div>
+          <div>
+            <span class="rail-value">BUILD</span>
+            <span class="rail-label">Diagnose / automate / improve</span>
           </div>
         </div>
       </div>
 
       <aside class="access-card" aria-labelledby="access-title">
+        <div class="access-card-index" aria-hidden="true">01</div>
         <div class="access-card-topline">
-          <span>BRIEF ACCESS</span>
-          <span>01</span>
+          <span>RECRUITER BRIEF</span>
+          <span>AES 256 / LOCAL</span>
         </div>
-        <div class="access-icon" aria-hidden="true">
-          <span></span><span></span><span></span>
+
+        <div class="access-graphic" aria-hidden="true">
+          <span class="access-axis access-axis-x"></span>
+          <span class="access-axis access-axis-y"></span>
+          <span class="access-node node-one"></span>
+          <span class="access-node node-two"></span>
+          <span class="access-node node-three"></span>
+          <span class="access-sweep"></span>
         </div>
-        <h2 id="access-title">Unlock recruiter briefing</h2>
-        <p>Enter the access phrase supplied separately with this application.</p>
+
+        <p class="access-kicker">PRIMARY BRIEFING</p>
+        <h2 id="access-title">Open the candidate video.</h2>
+        <p class="access-copy">The media package is encrypted at rest and decrypted locally in your browser. The access phrase is never stored on this site.</p>
 
         <form id="accessForm" novalidate>
           <label for="accessPhrase">Access phrase</label>
           <div class="input-row">
-            <input id="accessPhrase" name="accessPhrase" type="password" autocomplete="off" spellcheck="false" required />
-            <button id="unlockButton" type="submit">ACCESS</button>
+            <input id="accessPhrase" name="accessPhrase" type="password" autocomplete="off" spellcheck="false" aria-describedby="accessMessage" required />
+            <button id="unlockButton" type="submit"><span>OPEN BRIEF</span><span aria-hidden="true">↗</span></button>
           </div>
           <p id="accessMessage" class="access-message" role="status" aria-live="polite">Encrypted media remains locked until a valid phrase is supplied.</p>
         </form>
 
         <div class="security-note">
-          <span class="security-rule"></span>
-          <p>Candidate-provided material. Not an Anduril Industries website. Not classified.</p>
+          <span class="security-rule" aria-hidden="true"></span>
+          <p>Candidate provided material. Not an Anduril Industries website. Not classified.</p>
         </div>
       </aside>
     </section>
 
-    <section id="briefing" class="briefing shell" hidden aria-labelledby="briefing-title">
-      <div class="briefing-header">
-        <div>
-          <p class="eyebrow access-granted">Access granted / local decryption complete</p>
-          <h2 id="briefing-title">BUILDER BRIEFING</h2>
+    <section id="briefing" class="briefing" hidden aria-labelledby="briefing-title">
+      <div class="briefing-intro shell">
+        <div class="section-marker">
+          <span>01</span>
+          <span>VIDEO BRIEF</span>
+        </div>
+        <div class="briefing-title-wrap">
+          <p class="eyebrow access-granted">ACCESS GRANTED / LOCAL DECRYPTION COMPLETE</p>
+          <h2 id="briefing-title">FROM PRODUCT DEFINITION<br />TO PRODUCT SYSTEMS.</h2>
         </div>
         <div class="briefing-code">MT / PLM / 2026</div>
       </div>
 
-      <div class="briefing-grid">
+      <div class="video-section shell">
         <div class="video-panel">
           <div class="panel-heading">
-            <span>Candidate video</span>
-            <span>Primary brief</span>
+            <span>CANDIDATE VIDEO</span>
+            <span>PRIMARY BRIEF</span>
           </div>
           <div class="video-frame">
             <video id="briefVideo" controls playsinline preload="metadata"></video>
             <div id="videoPlaceholder" class="video-placeholder">
-              <div class="loader-ring" aria-hidden="true"></div>
-              <p>Preparing encrypted briefing media…</p>
+              <div class="loader-mark" aria-hidden="true"><span></span><span></span></div>
+              <p>Preparing decrypted briefing media</p>
             </div>
           </div>
         </div>
 
         <aside class="mission-panel">
-          <p class="panel-kicker">Mission fit</p>
-          <h3>I build at the seam between product definition and the systems that move it.</h3>
-          <p>My strongest work combines hands-on mechanical design experience with PLM administration, configuration control, workflow automation, and tools built around the way engineers actually work.</p>
+          <p class="panel-kicker">WHY THIS ROLE</p>
+          <h3>I have worked on both sides of the PLM problem.</h3>
+          <p>I spent years creating product definition inside CAD and PLM systems, then moved into administering, diagnosing, and improving those same systems. That changes how I build tooling: the workflow has to make sense to the engineer using it.</p>
 
-          <div class="signal-list">
-            <div>
-              <span>01</span>
-              <p><strong>Engineering systems</strong>Teamcenter administration, NX-managed workflows, product data integrity, change control, and technical issue resolution.</p>
-            </div>
-            <div>
-              <span>02</span>
-              <p><strong>Builder tooling</strong>Purpose-built utilities that remove repetitive work, expose bad data, and make configuration review faster and more reliable.</p>
-            </div>
-            <div>
-              <span>03</span>
-              <p><strong>Mission architecture</strong>Public-source CONOPS and architecture tooling that connects engineering decisions to operational context.</p>
-            </div>
+          <div class="mission-readout">
+            <div><span>01</span><strong>Understand the hardware</strong></div>
+            <div><span>02</span><strong>Trace the data</strong></div>
+            <div><span>03</span><strong>Remove the friction</strong></div>
+            <div><span>04</span><strong>Ship the improvement</strong></div>
           </div>
         </aside>
       </div>
 
-      <div class="alignment-grid" aria-label="Role alignment">
-        <article>
-          <span class="card-index">A</span>
-          <h3>Teamcenter + NX</h3>
-          <p>Experience supporting the CAD/PLM environment from both the designer and administrator side.</p>
-        </article>
-        <article>
-          <span class="card-index">B</span>
-          <h3>Integration thinking</h3>
-          <p>Comfortable tracing data, workflow, and configuration problems across engineering systems instead of treating each tool as an island.</p>
-        </article>
-        <article>
-          <span class="card-index">C</span>
-          <h3>Build, test, improve</h3>
-          <p>I tend to turn recurring engineering friction into working tools, then iterate them against real user problems.</p>
-        </article>
-      </div>
+      <section class="proof-band" aria-labelledby="proof-title">
+        <div class="shell">
+          <div class="section-marker dark-marker">
+            <span>02</span>
+            <span>MEASURED IMPACT</span>
+          </div>
+          <h2 id="proof-title" class="proof-title">ENGINEERING FRICTION<br />SHOULD HAVE A NUMBER.</h2>
 
-      <div class="closing-callout">
-        <span class="closing-rule"></span>
-        <p>If this is the kind of builder Anduril needs, I would welcome the chance to walk through the systems, tools, and engineering decisions behind the work.</p>
-      </div>
+          <div class="proof-grid">
+            <article>
+              <span class="proof-value">~3 HR → ~10 MIN</span>
+              <h3>Configuration automation</h3>
+              <p>Built a ROTEX configurator that compressed a recurring engineering task from hours to minutes.</p>
+            </article>
+            <article>
+              <span class="proof-value">40–60%</span>
+              <h3>Design time reduction</h3>
+              <p>Used Inventor iLogic automation to reduce design effort across repeatable project work.</p>
+            </article>
+            <article>
+              <span class="proof-value">THOUSANDS</span>
+              <h3>NX model recovery</h3>
+              <p>Built and used diagnostic utilities to identify tag related failures and repair large populations of NX models.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="systems shell" aria-labelledby="systems-title">
+        <div class="section-marker">
+          <span>03</span>
+          <span>SELECTED SYSTEMS</span>
+        </div>
+        <div class="systems-heading">
+          <h2 id="systems-title">TOOLS BUILT AROUND<br />REAL ENGINEERING WORK.</h2>
+          <p>The through line is consistent: find the point where engineering data, process, and people lose time, then build a system that makes the work more reliable.</p>
+        </div>
+
+        <div class="systems-grid">
+          <article class="system-card">
+            <div class="system-card-top"><span>SYS / 01</span><span>PLM OPERATIONS</span></div>
+            <h3>Teamcenter + NX</h3>
+            <p>Teamcenter 2312 administration in a four tier environment, NX managed workflows, configuration and release support, FMS and client diagnostics, user support, documentation, and engineering standards.</p>
+            <div class="tag-row"><span>TEAMCENTER</span><span>NX</span><span>FMS</span><span>WORKFLOW</span></div>
+          </article>
+
+          <article class="system-card">
+            <div class="system-card-top"><span>SYS / 02</span><span>CONFIGURATION EVIDENCE</span></div>
+            <h3>Revision history as a system</h3>
+            <p>Built tooling that connects drawing revision history, project relationships, supporting source evidence, and review output so configuration questions can be answered faster and with traceability.</p>
+            <div class="tag-row"><span>TRACEABILITY</span><span>DATA</span><span>REVIEW</span><span>AUTOMATION</span></div>
+          </article>
+
+          <article class="system-card">
+            <div class="system-card-top"><span>SYS / 03</span><span>MISSION ARCHITECTURE</span></div>
+            <h3>CONOPS simulator</h3>
+            <p>Developed a deterministic mission architecture prototype with typed catalogs, state transitions, exchanges, failures and recovery, scenario replay, verification, and evidence provenance.</p>
+            <div class="tag-row"><span>SIMULATION</span><span>ARCHITECTURE</span><span>REPLAY</span><span>PROVENANCE</span></div>
+          </article>
+
+          <article class="system-card">
+            <div class="system-card-top"><span>SYS / 04</span><span>ENGINEERING AUTOMATION</span></div>
+            <h3>Builder utilities</h3>
+            <p>Created focused tools for repetitive engineering work including CAD diagnostics, PDF history review, configuration reporting, data extraction, and workflow support.</p>
+            <div class="tag-row"><span>CAD</span><span>PLM</span><span>REPORTING</span><span>TOOLS</span></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="fit-section">
+        <div class="shell fit-layout">
+          <div class="section-marker dark-marker">
+            <span>04</span>
+            <span>ROLE ALIGNMENT</span>
+          </div>
+          <div class="fit-statement">
+            <p class="eyebrow">THE VALUE PROPOSITION</p>
+            <h2>ENGINEER FIRST.<br />SYSTEMS BUILDER ALWAYS.</h2>
+          </div>
+          <div class="fit-list">
+            <div>
+              <span>01</span>
+              <p><strong>PLM in context</strong>Product data, CAD, configuration control, manufacturing support, and the people who depend on all of it.</p>
+            </div>
+            <div>
+              <span>02</span>
+              <p><strong>Operational troubleshooting</strong>Comfortable tracing failures across clients, data, workflow, configuration, and user behavior instead of stopping at the first symptom.</p>
+            </div>
+            <div>
+              <span>03</span>
+              <p><strong>Build over workaround</strong>Recurring friction becomes a candidate for tooling, automation, documentation, or a better system design.</p>
+            </div>
+            <div>
+              <span>04</span>
+              <p><strong>Hardware empathy</strong>Deep mechanical design experience keeps PLM decisions grounded in how products are actually created and changed.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="closing shell" aria-label="Closing statement">
+        <div class="section-marker">
+          <span>05</span>
+          <span>NEXT MISSION</span>
+        </div>
+        <p class="closing-kicker">MAXIM TELEGUZ / PLM SYSTEMS BUILDER</p>
+        <h2>I KNOW THE HARDWARE BECAUSE I DESIGNED IT.<br /><span>I KNOW THE SYSTEM BECAUSE I HAD TO IMPROVE IT.</span></h2>
+        <p class="closing-copy">I would welcome the opportunity to walk through the engineering decisions, tooling, and systems behind the work.</p>
+      </section>
     </section>
   </main>
 
   <footer class="site-footer shell">
-    <span>MAXIM TELEGUZ / CANDIDATE BRIEF</span>
+    <span>MAXIM TELEGUZ / ENGINEERING SYSTEMS BRIEF</span>
     <span id="footerState">ENCRYPTED MEDIA LOCKED</span>
   </footer>
 
