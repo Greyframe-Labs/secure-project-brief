@@ -18,7 +18,7 @@ The encrypted video format uses:
 - AES-256-GCM
 - a random 12-byte IV
 
-The encrypted file is stored as `assets/recruiter-brief.enc`.
+The preferred encrypted file path is `assets/recruiter-brief.enc`.
 
 Because GitHub Pages is static hosting, this is **encryption-based access control**, not server-side authentication. Anyone who knows the URL can download the encrypted blob, so use a long unique passphrase and deliver it separately from the page URL.
 
@@ -29,12 +29,31 @@ Because GitHub Pages is static hosting, this is **encryption-based access contro
 3. Enter the passphrase you intend to provide to the recruiter.
 4. Download the encrypted output.
 5. Rename it to `recruiter-brief.enc` if needed.
-6. Place it at `assets/recruiter-brief.enc`.
+6. If the encrypted file is under 100 MiB, place it at `assets/recruiter-brief.enc`.
 7. Commit and push.
 
 The encryption tool runs entirely in the browser. It does not upload the selected video anywhere.
 
-> GitHub blocks normal repository files larger than 100 MiB. If the encrypted video approaches that size, host the encrypted blob in object storage and update `ENCRYPTED_VIDEO_URL` in `app.js`.
+## If the encrypted file is over 100 MiB
+
+GitHub blocks normal repository files larger than 100 MiB. The site therefore also supports a split encrypted payload.
+
+On Windows, from the repository root, run:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\tools\split-encrypted.ps1 -InputFile "C:\path\to\recruiter-brief.enc" -OutputDirectory ".\assets"
+```
+
+The default 55 MiB chunk size will create files such as:
+
+```text
+assets/recruiter-brief.enc.part1
+assets/recruiter-brief.enc.part2
+```
+
+Commit the generated parts instead of the oversized single `.enc` file. The GitHub Pages client first looks for `assets/recruiter-brief.enc`; if that file is absent, it automatically fetches the two part files in order, rejoins the encrypted bytes in memory, and then performs the same AES-256-GCM decryption.
+
+The split files remain encrypted. Splitting does not expose or alter the plaintext video and does not change the access phrase.
 
 ## Publish with GitHub Pages
 
