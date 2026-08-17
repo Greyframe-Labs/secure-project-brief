@@ -1,4 +1,8 @@
 const ENCRYPTED_VIDEO_URL = "assets/recruiter-brief.enc";
+const ENCRYPTED_VIDEO_PARTS = [
+  "assets/recruiter-brief.enc.part1",
+  "assets/recruiter-brief.enc.part2"
+];
 const PBKDF2_ITERATIONS = 600000;
 const MAGIC = new Uint8Array([0x53, 0x50, 0x42, 0x31]); // SPB1
 const SALT_LENGTH = 16;
@@ -59,18 +63,46 @@ async function deriveKey(passphrase, salt) {
   );
 }
 
-async function fetchEncryptedBrief() {
-  const response = await fetch(ENCRYPTED_VIDEO_URL, { cache: "no-store" });
-
-  if (response.status === 404) {
-    throw new Error("MEDIA_NOT_DEPLOYED");
-  }
-
+async function fetchArrayBuffer(url) {
+  const response = await fetch(url, { cache: "no-store" });
   if (!response.ok) {
-    throw new Error("MEDIA_FETCH_FAILED");
+    const error = new Error(response.status === 404 ? "NOT_FOUND" : "MEDIA_FETCH_FAILED");
+    error.status = response.status;
+    throw error;
+  }
+  return response.arrayBuffer();
+}
+
+async function fetchEncryptedBrief() {
+  try {
+    return await fetchArrayBuffer(ENCRYPTED_VIDEO_URL);
+  } catch (error) {
+    if (error?.message !== "NOT_FOUND") throw error;
   }
 
-  return response.arrayBuffer();
+  const partBuffers = [];
+  for (const partUrl of ENCRYPTED_VIDEO_PARTS) {
+    try {
+      partBuffers.push(await fetchArrayBuffer(partUrl));
+    } catch (error) {
+      if (error?.message === "NOT_FOUND") {
+        throw new Error("MEDIA_NOT_DEPLOYED");
+      }
+      throw error;
+    }
+  }
+
+  const totalLength = partBuffers.reduce((sum, buffer) => sum + buffer.byteLength, 0);
+  const combined = new Uint8Array(totalLength);
+  let offset = 0;
+
+  for (const buffer of partBuffers) {
+    const bytes = new Uint8Array(buffer);
+    combined.set(bytes, offset);
+    offset += bytes.length;
+  }
+
+  return combined.buffer;
 }
 
 function parseEncryptedBrief(buffer) {
